@@ -4,10 +4,14 @@ Helper module to invoke the WinGet command in PowerShell and parse the command o
 
 ## Available Command: Invoke-PSWinGet
 
+### Commands
+
+'l','list', 'installed','s','search', 'online','u','update', 'upgrade','e','export'
+
 ## How To Use This Module ?
 
 ```
-    import-module .\PowerShell.Invoke.WinGetCommand.psm1
+    import-module .\PowerShell.Module.InvokeWinGet.psm1
 ```
 
 ### To Install, I will refer to Microoft's Module Documentation
@@ -19,24 +23,28 @@ A this [link](https://learn.microsoft.com/en-us/powershell/module/microsoft.powe
 
 ### Get list of installed software
 
+#### Use this argument 'l','list', 'installed'
+
 ```
-    pswinget installed
+    pswinget <list|installed>
 ```
 
 ### Get list of software online (not installed)
 
+#### Use this argument 's','search', 'online'
+
 ```
-    pswinget online <search term>
+    pswinget <search|online> <search term>
 ```
 
 ### Get list of software with a new version available (upgradable)
-
+#### Use this argument 'u','update', 'upgrade'
 ```
-    pswinget upgradable
+    pswinget upgrade
 ```
 
 ### Export list of installed software with information if theres a new version available (in a json file)
-
+#### Use this argument 'e','export'
 ```
     pswinget export "PATH to File"
 ```

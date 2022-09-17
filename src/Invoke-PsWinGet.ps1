@@ -17,11 +17,11 @@ Function Invoke-PSWinGet {
     param(
 
         [ValidateScript({
-            $supported_commands = @('installed','list','search','online','upgrade','export')
+            $supported_commands = @('l','list', 'installed','s','search', 'online','u','update', 'upgrade','e','export')
             $user_entry = $_.ToLower()
             $Ok = $supported_commands.Contains($user_entry)
             if(-Not ($Ok) ){
-                throw "command not supported ($user_entry). Supported Commands are 'list/installed','search/online','upgrade' or 'export'"
+                throw "command not supported ($user_entry). Supported Commands are 'l','list', 'installed','s','search', 'online','u','update', 'upgrade','e' and 'export'"
             }
             return $true 
         })]
@@ -89,10 +89,10 @@ Function Invoke-PSWinGet {
     [void]$categories.Add('Version')
     [void]$categories.Add('Available')
     [void]$categories.Add('Source')
-    switch($Command){
+    switch($Command.ToLower()){
 
-        'installed'        { $Command = 'list' }
-        'list'   {
+
+        { 'l','list', 'installed' -eq $_ }   {
             [CmdType]$CmdType = [CmdType]::installed
 
             # Call command AND PARSE the output
@@ -109,8 +109,8 @@ Function Invoke-PSWinGet {
                 }
             }
         }
-        'online'        { $Command = 'search' }
-        'search'    {
+
+        { 's','search', 'online' -eq $_ }    {
             [CmdType]$CmdType = [CmdType]::online
             if($PSBoundParameters.ContainsKey('Option') -eq $False){ throw "Command 'search/online' requires search argument"}
             $categories = [system.collections.arraylist]::new()
@@ -138,7 +138,7 @@ Function Invoke-PSWinGet {
         }
 
 
-        'upgrade' {
+        { 'u','update', 'upgrade' -eq $_ } {
             [CmdType]$CmdType = [CmdType]::upgradable
             &"$WinGetExe"  "upgrade" "--include-unknown"  | out-string -stream | foreach-object{ 
                 $line = "$_`n"
@@ -154,7 +154,7 @@ Function Invoke-PSWinGet {
             }
         }
 
-        'export' {
+        { 'e','export' -eq $_ } {
             [CmdType]$CmdType = [CmdType]::export
             if($PSBoundParameters.ContainsKey('Option') -eq $False){ throw "Command 'export' requires file path argument"}
             $upgrade_cmd_results = [system.collections.arraylist]::new()
