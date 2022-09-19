@@ -357,16 +357,21 @@ Function Invoke-PSWinGet {
     # =================================================================
     # cmd type: easier when its an enum
     # =================================================================
-    Add-Type -TypeDefinition @"
-       public enum CmdType
-       {
-            invalid = 0,
-            installed,
-            online,
-            upgradable,
-            export
-       }
-"@
+    try{
+        Add-Type -ErrorAction Ignore -TypeDefinition @"
+           public enum CmdType
+           {
+                invalid = 0,
+                installed,
+                online,
+                upgradable,
+                export
+           }
+"@  
+    }catch{
+        Write-Verbose "New Type already added"
+    }
+
 
     $Script:OutputHack - $False
     [CmdType]$CmdType = [CmdType]::invalid
