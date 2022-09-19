@@ -559,3 +559,5 @@ Function Invoke-PSWinGet {
     return $software_list_res;
 
 }
+
+ Invoke-PSWinget List | Where name -imatch "VP9 Video Extensions" | Select-Object -ExpandProperty Version
