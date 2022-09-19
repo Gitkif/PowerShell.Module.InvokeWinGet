@@ -554,3 +554,12 @@ Function Invoke-PSWinGet {
     return $software_list_res;
 
 }
+
+Read-Host 'Press any key to call Get-InstalledSoftware'
+
+Get-InstalledSoftware
+
+
+Read-Host 'Press any key to call Invoke-PSWinGet'
+
+Invoke-PSWinGet list
