@@ -412,7 +412,7 @@ Function Invoke-PSWinGet {
             [CmdType]$CmdType = [CmdType]::installed
 
             # Call command AND PARSE the output
-            &"$WinGetExe"  "list"  | out-string -stream | foreach-object{ 
+            &"$WinGetExe"  "list" "--accept-source-agreements"  | out-string -stream | foreach-object{ 
                 $line = "$_`n"
                 # NICE TO HAVE, replace the PROGRESS characters... suck but no go with MSPOWERSHELLv5, just works with core. Fuck it.
                 #$line = $line.Replace("-\\|/┤┘┴└├┌┬┐⠂-–—–-", "$e[u")
