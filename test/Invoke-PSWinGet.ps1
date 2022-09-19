@@ -290,12 +290,17 @@ Class WinGetPackageVersion : IComparable {
             if($strver -match 'Unknown'){ $this.Default(); return;}
             $data = $strver.split('.')
             if($data.Count -eq 0){throw "WinGetPackageVersion error"}
-            if($data[0] -ne $Null){ $this.Major = $data[0]}
-            if($data[1] -ne $Null){ $this.Minor = $data[1]}
-            if($data[2] -ne $Null){ $this.Build = $data[2]}
-            if($data[3] -ne $Null){ $this.RevMajor = $data[3]}
-            if($data[4] -ne $Null){ $this.RevMinor = $data[4]}
-            if($data[5] -ne $Null){ $this.VersionBuffer = $data[5]}
+            try{
+                if($data[0] -ne $Null){ $this.Major = $data[0]}
+                if($data[1] -ne $Null){ $this.Minor = $data[1]}
+                if($data[2] -ne $Null){ $this.Build = $data[2]}
+                if($data[3] -ne $Null){ $this.RevMajor = $data[3]}
+                if($data[4] -ne $Null){ $this.RevMinor = $data[4]}
+                if($data[5] -ne $Null){ $this.VersionBuffer = $data[5]}
+            }catch{
+                Write-Verbose "ERROR IN VERSION CONVERSION"
+            }
+
         }
         WinGetPackageVersion([int]$ver_maj, [int]$ver_min, [int]$ver_build=0, [int]$ver_revmaj=0, [int]$ver_revmin=0, [int]$ver_buf=0){
             $this.Major = $ver_maj
@@ -554,12 +559,3 @@ Function Invoke-PSWinGet {
     return $software_list_res;
 
 }
-
-Read-Host 'Press any key to call Get-InstalledSoftware'
-
-Get-InstalledSoftware
-
-
-Read-Host 'Press any key to call Invoke-PSWinGet'
-
-Invoke-PSWinGet list
