@@ -368,15 +368,19 @@ Function Invoke-PSWinGet {
        }
 "@
 
+    $Script:OutputHack - $False
     [CmdType]$CmdType = [CmdType]::invalid
     $WinGetExe = Get-WinGetExePath
 
     # try my best to fix the OUTPUT from WinGet...
     $e = "$([char]27)"
-    #hide the cursor
-    Write-Host "$e[?25l"  -NoNewline  
-    write-host "$($e)[s" -NoNewline
-    Write-Host "$e[u" -NoNewline  
+    if($Script:OutputHack){
+        #hide the cursor
+        Write-Host "$e[?25l"  -NoNewline  
+        write-host "$($e)[s" -NoNewline
+        Write-Host "$e[u" -NoNewline   
+    }
+
 
     ########################################
     # REGEX USEFUL FOR PARSING MY OUTPUT....
@@ -496,11 +500,12 @@ Function Invoke-PSWinGet {
         
     } # switch
     
-    #restore scrolling region
-    Write-Host "$e[s$($e)[r$($e)[u" -NoNewline
-    #show the cursor
-    Write-Host "$e[?25h" 
-
+    if($Script:OutputHack){
+        #restore scrolling region
+        Write-Host "$e[s$($e)[r$($e)[u" -NoNewline
+        #show the cursor
+        Write-Host "$e[?25h" 
+    }
 
     $software_list_res = [system.collections.arraylist]::new()
     $LatestVersion = $CmdType -eq [CmdType]::upgradable
@@ -560,4 +565,17 @@ Function Invoke-PSWinGet {
 
 }
 
- Invoke-PSWinget List | Where name -imatch "VP9 Video Extensions" | Select-Object -ExpandProperty Version
+# First: Get the entire content of the application data
+$AppData = Invoke-PSWinget List | Where name -imatch "VP9 Video Extensions"
+
+# Retrieve the version as a version OBJECT
+[WinGetPackageVersion]$AppVersion = $AppData.Version
+
+#Then get the version String
+[string]$BuildString = $AppVersion.Build
+
+# Get App name
+[string]$AppName = $AppData.Name
+
+Write-Host "The Build number for $AppName is " -n -f DarkYellow
+Write-Host "$BuildString" -f DarkRed
